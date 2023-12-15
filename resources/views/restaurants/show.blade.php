@@ -32,7 +32,11 @@
       </div>
       <div>
         <div class="mb-2">
+          @if ($restaurant->image && Storage::exists('public/img/restaurant_images/' . $restaurant->image))
           <img src="{{ asset('/storage/img/restaurant_images/' . $restaurant->image) }}" alt="" class="restaurant-image">
+          @else
+          <img src="{{ asset('/img/noimage.jpg') }}" alt="" class="restaurant-image">
+          @endif
         </div>
         <div class="container">
           <div class="row mb-2 pb-2 border-bottom">

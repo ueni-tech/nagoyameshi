@@ -60,7 +60,13 @@
             <tr>
               <th scope="row" class="small">{{$loop->iteration}}</th>
               <td class="small">{{$fav->created_at->format('Y/m/d')}}</td>
-              <td><img src="{{asset('storage/img/restaurant_images/' . $restaurant->image)}}" class="img-fluid" alt=""></td>
+              <td>
+                @if ($restaurant->image && Storage::exists('public/img/restaurant_images/' . $restaurant->image))
+                <img src="{{asset('storage/img/restaurant_images/' . $restaurant->image)}}" class="img-fluid" alt="">
+                @else
+                <img src="{{asset('/img/noimage.jpg')}}" class="img-fluid" alt="">
+                @endif
+              </td>
               <td>{{$restaurant->name}}</td>
               <td class="table-ellipsis">{{$restaurant->description}}</td>
               <td>

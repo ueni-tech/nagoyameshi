@@ -28,6 +28,10 @@
         <div class="col-8 mb-2" style="width: 30%;">
           <img src="{{ asset('storage/img/restaurant_images/' . $restaurant->image) }}" alt="Restaurant Image" class="img-fluid">
         </div>
+        @else
+        <div class="col-8 mb-2" style="width: 30%;">
+          <img src="{{ asset('/img/noimage.jpg') }}" alt="No Image" class="img-fluid">
+        </div>
         @endif
         <input type="file" id="restaurant-image" name="image" class="form-control col-8">
       </div>

@@ -27,7 +27,11 @@
       <div class="col">
         <a href="{{route('restaurants.show', $restaurant_ranking)}}" class="card-link">
           <div class="card">
+            @if ($restaurant_ranking->image && Storage::exists('public/img/restaurant_images/' . $restaurant_ranking->image))
             <img src="{{asset('/storage/img/restaurant_images/' . $restaurant_ranking->image)}}" alt="" class="card-img-top restaurant-card__img">
+            @else
+            <img src="{{asset('/img/noimage.jpg')}}" alt="" class="card-img-top restaurant-card__img">
+            @endif
             <div class="card-body">
               <h5>{{$restaurant_ranking->name}}</h5>
               <div class="mb-1">
@@ -62,7 +66,11 @@
       <div class="col">
         <a href="{{route('restaurants.show', $restaurant)}}" class="card-link">
           <div class="card">
+            @if ($restaurant->image && Storage::exists('public/img/restaurant_images/' . $restaurant->image))
             <img src="{{asset('/storage/img/restaurant_images/' . $restaurant->image)}}" alt="" class="card-img-top restaurant-card__img">
+            @else
+            <img src="{{asset('/img/noimage.jpg')}}" alt="" class="card-img-top restaurant-card__img">
+            @endif
             <div class="card-body">
               <h5>{{$restaurant->name}}</h5>
               <div class="mb-1">

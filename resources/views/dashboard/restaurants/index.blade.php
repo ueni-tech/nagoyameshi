@@ -76,7 +76,13 @@
         @foreach($restaurants as $restaurant)
         <tr>
           <th scope="row">{{$restaurant->id}}</th>
-          <td><img src="{{asset('storage/img/restaurant_images/' . $restaurant->image)}}" alt=""></td>
+          <td>
+            @if ($restaurant->image && Storage::exists('public/img/restaurant_images/' . $restaurant->image))
+            <img src="{{asset('storage/img/restaurant_images/' . $restaurant->image)}}" alt="">
+            @else
+            <img src="{{asset('/img/noimage.jpg')}}" alt="">
+            @endif
+          </td>
           <td class="restaurant_name">{{$restaurant->name}}</td>
           <td>
             {{$restaurant->opening_time}}<br>{{$restaurant->closing_time}}

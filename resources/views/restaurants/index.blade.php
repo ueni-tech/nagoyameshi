@@ -66,7 +66,11 @@
           <div class="card restaurants_index_card">
             <div class=" row g-0">
               <div class="col-md-4">
+                @if ($restaurant->image && Storage::exists('public/img/restaurant_images/' . $restaurant->image))
                 <img src="{{asset('/storage/img/restaurant_images/' . $restaurant->image)}}" alt="{{$restaurant->name}}" class="restaurants_index_img">
+                @else
+                <img src="{{asset('/img/noimage.jpg')}}" alt="No Image" class="restaurants_index_img">
+                @endif
               </div>
               <div class="col-md-8">
                 <div class="card-body">
