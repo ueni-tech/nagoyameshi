@@ -29,22 +29,37 @@ class DashboardController extends Controller
 
         $reservations_this_month_count = Reservation::whereMonth('reserved_datetime', date('m'))->count();
 
-        // 当月のサブスクリプションの合計金額を取得
-        $total_amount = 0;
         // StripeのAPIキーをセット
         Stripe::setApiKey('sk_test_51OHLVEKhH49tdTK4MtQd5T6od98pDS6inyjd5OultdkMjf5gd4J2nyjNQl6CH6JNYenmI38qodjHJKjyzsGtw5an00BbD3BovI');
-        foreach ($subscribed_users as $subscribed_user) {
-            $subscriptionItem = $subscribed_user->subscription('default')->items->first();
-            $stripePriceId = $subscriptionItem->stripe_price;
 
+
+        // 当月のサブスクリプションの合計金額を取得
+        $this_month_total_amount = 0;
+        $this_year = date('Y');
+        $this_month = date('m');
+
+        $startOfMonth = Carbon::createFromDate($this_year, $this_month, 1)->startOfMonth();
+        $endOfMonth = Carbon::createFromDate($this_year, $this_month, 1)->endOfMonth();
+
+        $activeSubscriptions = DB::table('subscriptions')
+        ->where('created_at', '<', $endOfMonth)
+            ->where(function ($query) use ($startOfMonth) {
+                $query->whereNull('ends_at')
+                    ->orWhere('ends_at', '>', $startOfMonth);
+            })
+            ->get();
+
+        foreach ($activeSubscriptions as $activeSubscription) {
+            $stripePriceId = $activeSubscription->stripe_price;
             try {
-                $price = Price::retrieve($stripePriceId);
-                $amount = $price->unit_amount;
-                $total_amount += $amount;
+                $this_month_price = Price::retrieve($stripePriceId);
+                $this_month_amount = $this_month_price->unit_amount;
+                $this_month_total_amount += $this_month_amount;
             } catch (\Exception $e) {
                 echo '価格情報の取得に失敗しました。';
             }
         }
+
 
         // 特定の月のサブスクリプションの合計金額を取得
         $year = null;
@@ -77,6 +92,6 @@ class DashboardController extends Controller
             }
         }
 
-        return view('dashboard.index', compact('users_total_count', 'users_subscribed_count', 'restaurants_total_count', 'reservations_this_month_count', 'total_amount', 'specify_month_total_amount', 'year', 'month'));
+        return view('dashboard.index', compact('users_total_count', 'users_subscribed_count', 'restaurants_total_count', 'reservations_this_month_count', 'this_month_total_amount', 'specify_month_total_amount', 'year', 'month'));
     }
 }
