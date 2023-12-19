@@ -55,7 +55,7 @@
           <tbody>
             @foreach($favorites as $fav)
             @php
-            $restaurant = App\Models\restaurant::find($fav->favoriteable_id);
+            $restaurant = $restaurants[$fav->id];
             @endphp
             <tr>
               <th scope="row" class="small">{{$loop->iteration}}</th>

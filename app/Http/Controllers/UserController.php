@@ -126,16 +126,15 @@ class UserController extends Controller
     public function favorite(Request $request)
     {
         $user = Auth::user();
+        $sorted = $request->sort ?? 'desc';
+        $favorites = $user->favorites()->orderBy('updated_at', $sorted)->paginate(5);
 
-        if ($request->sort !== null) {
-            $sorted = $request->sort;
-            $favorites = $user->favorites()->orderBy('updated_at', $sorted)->paginate(5);
-            return view('users.favorites', compact('favorites', 'sorted'));
-        } else {
-            $sorted = 'desc';
-            $favorites = $user->favorites()->orderBy('updated_at', 'desc')->paginate(5);
-            return view('users.favorites', compact('favorites', 'sorted'));
-        }
+        // お気に入りに関連するレストランを取得
+        $restaurants = $favorites->mapWithKeys(function ($favorite) {
+            return [$favorite->id => Restaurant::find($favorite->favoriteable_id)];
+        });
+
+        return view('users.favorites', compact('favorites', 'sorted', 'restaurants'));
     }
 
     public function reservations()
