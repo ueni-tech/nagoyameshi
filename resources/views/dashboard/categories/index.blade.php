@@ -23,7 +23,7 @@
       <label for="category-name">カテゴリ新規作成</label>
       <div class="input-group mt-2">
         <input type="text" name="name" id="category-name" class="form-control" placeholder="カテゴリ名">
-        <button type="submit" class="btn btn-sm btn-success">新規作成</button>
+        <button type="submit" id="submit_button" class="btn btn-sm btn-success">新規作成</button>
       </div>
     </form>
 
@@ -59,3 +59,7 @@
   </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="{{asset('js/inputCheck.js')}}"></script>
+@endpush

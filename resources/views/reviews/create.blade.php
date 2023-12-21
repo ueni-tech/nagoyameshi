@@ -69,7 +69,7 @@
       </div>
 
       <div class="form-group d-flex justify-content-center mb-4">
-        <button type="submit" class="btn btn-primary bg_main text-white shadow-sm w-50">投稿</button>
+        <button type="submit" id="submit_button" class="btn btn-primary bg_main text-white shadow-sm w-50">投稿</button>
       </div>
     </form>
 
@@ -77,3 +77,7 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script src="{{asset('js/inputCheck.js')}}"></script>
+@endpush

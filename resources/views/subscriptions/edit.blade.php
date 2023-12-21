@@ -59,7 +59,7 @@
         @csrf
         <input id="card-holder-name" type="text" placeholder="カード名義人" name="card-holder-name">
         <div id="card-element"></div>
-        <button id="card-button" data-secret="{{$intent->client_secret}}" class="btn btn-primary bg_main w-100">更新</button>
+        <button id="submit_button" data-secret="{{$intent->client_secret}}" class="btn btn-primary bg_main w-100">更新</button>
       </form>
 
     </div>
@@ -75,7 +75,7 @@
   cardElement.mount('#card-element');
 
   const cardHolderName = document.getElementById('card-holder-name');
-  const cardButton = document.getElementById('card-button');
+  const cardButton = document.getElementById('submit_button');
   const clientSecret = cardButton.dataset.secret;
 
   cardButton.addEventListener('click', async (e) => {
@@ -117,6 +117,7 @@
   }
 </script>
 
+<script src="{{asset('js/inputCheck.js')}}"></script>
 @endpush
 
 @endsection

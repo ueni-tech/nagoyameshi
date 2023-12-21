@@ -51,10 +51,14 @@
         <input type="text" id="company-number_of_employees" name="number_of_employees" class="form-control col-8" value="{{old('number_of_employees', $company->number_of_employees)}}" placeholder="例）○○○名">
       </div>
       <div class="form-inline my-4 row">
-        <button type="submit" class="btn btn-primary w-25">更新</button>
+        <button type="submit" id="submit_button" class="btn btn-primary w-25">更新</button>
       </div>
     </div>
   </form>
   @endforeach
 </div>
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/inputCheck.js') }}"></script>
+@endpush
