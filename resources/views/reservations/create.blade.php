@@ -35,18 +35,22 @@
         <div class="form-group row mb-3">
           <label for="reserved_datetime" class="col-3 col-form-label fw-bold">予約日時</label>
           <div class="col-9">
-            <input type="datetime-local" name="reserved_datetime" id="reserved_datetime" class="form-control" value="{{old('reserved_datetime')}}">
+            <input type="datetime-local" name="reserved_datetime" id="reserved_datetime" class="form-control userInput" value="{{old('reserved_datetime')}}">
           </div>
         </div>
         <div class="form-group row mb-3">
           <label for="number_of_people" class="col-3 col-form-label fw-bold">人数</label>
           <div class="col-9">
-            <input type="number" name="number_of_people" id="number_of_people" class="form-control" value="{{old('number_of_people')}}" min="1" max="20" step="1">
+            <input type="number" name="number_of_people" id="number_of_people" class="form-control userInput" value="{{old('number_of_people')}}" min="1" max="20" step="1">
           </div>
         </div>
         <div class="text-center">
-          <button type="submit" class="btn btn-primary bg_main text-white shadow-sm w-50">予約する</button>
+          <button type="submit" id="submit_button" class="btn btn-primary bg_main text-white shadow-sm w-50">予約する</button>
         </div>
       </form>
     </div>
     @endsection
+
+    @push('scripts')
+    <script src="{{asset('js/inputCheck.js')}}"></script>
+    @endpush
