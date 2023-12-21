@@ -69,9 +69,13 @@
         </div>
       </div>
       <div class="d-flex justify-content-start">
-        <button type="submit" class="w-25 btn btn-primary">店舗を登録</button>
+        <button type="submit" id="submit_button" class="w-25 btn btn-primary">店舗を登録</button>
       </div>
     </div>
   </form>
 </div>
 @endsection
+
+@push('scripts')
+<script src="{{asset('js/inputCheck.js')}}"></script>
+@endpush
