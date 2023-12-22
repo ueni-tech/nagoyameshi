@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Models\Category;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
@@ -38,9 +39,15 @@ class CategoryController extends Controller
                 'name.unique' => 'そのカテゴリ名は既に登録されています。',
             ]);
 
-        $category = new Category();
-        $category->name = $request->input('name');
-        $category->save();
+            try {
+              DB::transaction(function () use ($request) {
+                $category = new Category();
+                $category->name = $request->input('name');
+                $category->save();
+              });
+            } catch (\Exception $e) {
+              return back()->withInput()->withErrors(['error' => 'カテゴリの作成に失敗しました。']);
+            }
 
         return to_route('dashboard.categories.index')->with('message', 'カテゴリを作成しました。');
     }
@@ -75,8 +82,14 @@ class CategoryController extends Controller
                 'name.unique' => 'そのカテゴリ名は既に登録されています。',
             ]);
             
-        $category->name = $request->input('name');
-        $category->save();
+        try {
+            DB::transaction(function () use ($request, &$category) {
+                $category->name = $request->input('name');
+                $category->save();
+            });
+        } catch (\Exception $e) {
+            return back()->withInput()->withErrors(['error' => 'カテゴリの更新に失敗しました。']);
+        }
 
         return to_route('dashboard.categories.index');
     }
