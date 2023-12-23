@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -71,17 +72,22 @@ class UserController extends Controller
             );
         }
 
-        $user->name = $request->input('name');
-        $user->furigana = $request->input('furigana');
-        $user->email = $request->input('email');
-        $user->update();
+        try {
+            DB::transaction(function () use ($user, $request) {
+                $user->name = $request->input('name');
+                $user->furigana = $request->input('furigana');
+                $user->email = $request->input('email');
+                $user->update();
 
-        // stripeの顧客情報を更新
-        $user->updateStripeCustomer([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-        ]);
-
+                // stripeの顧客情報を更新
+                $user->updateStripeCustomer([
+                    'name' => $request->input('name'),
+                    'email' => $request->input('email'),
+                ]);
+            });
+        } catch (Exception $e) {
+            return redirect()->route('mypage.edit')->withErrors('error', '会員情報の更新に失敗しました。');
+        }
 
         return redirect()->route('mypage.edit')->with('message', '会員情報を更新しました。');
     }

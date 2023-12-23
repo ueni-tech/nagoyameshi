@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CompanyController extends Controller
 {
@@ -69,14 +70,20 @@ class CompanyController extends Controller
                 'number_of_employees.integer' => '従業員数は整数で入力してください。',
             ]);
 
-            $company->name = $request->input('name');
-            $company->postal_code = $request->input('postal_code');
-            $company->address = $request->input('address');
-            $company->representative = $request->input('representative');
-            $company->capital = $request->input('capital');
-            $company->business = $request->input('business');
-            $company->number_of_employees = $request->input('number_of_employees');
-            $company->save();
+            try {
+                DB::transaction(function () use ($request, $company) {
+                    $company->name = $request->input('name');
+                    $company->postal_code = $request->input('postal_code');
+                    $company->address = $request->input('address');
+                    $company->representative = $request->input('representative');
+                    $company->capital = $request->input('capital');
+                    $company->business = $request->input('business');
+                    $company->number_of_employees = $request->input('number_of_employees');
+                    $company->save();
+                });
+            } catch (\Exception $e) {
+                return back()->withInput()->withErrors(['error' => '会社情報の更新に失敗しました。']);
+            }
     
             return redirect()->route('dashboard.company.index')->with('message', '会社情報を更新しました。');
     }

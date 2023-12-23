@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Review;
 use Illuminate\Http\Request;
 use App\Models\Restaurant;
+use Illuminate\Support\Facades\DB;
 
 class ReviewController extends Controller
 {
@@ -54,12 +55,18 @@ class ReviewController extends Controller
             'content.required' => '感想を入力してください。',
         ]);
 
-        $review = new Review();
-        $review->content = $request->input('content');
-        $review->score = $request->input('score');
-        $review->user_id = $request->user()->id;
-        $review->restaurant_id = $restaurantId;
-        $review->save();
+        try {
+          DB::transaction(function () use (&$request, $restaurantId) {
+            $review = new Review();
+            $review->content = $request->input('content');
+            $review->score = $request->input('score');
+            $review->user_id = $request->user()->id;
+            $review->restaurant_id = $restaurantId;
+            $review->save();
+          });
+        } catch (\Exception $e) {
+          return back()->withInput()->withErrors(['error' => 'レビューの作成に失敗しました。']);
+        }
 
         return redirect()->route('reviews.index', compact('restaurant'))->with('message', 'レビューを投稿しました。');
     }
@@ -105,9 +112,15 @@ class ReviewController extends Controller
             'content.required' => '感想を入力してください。',
         ]);
 
-        $review->content = $request->input('content');
-        $review->score = $request->input('score');
-        $review->save();
+        try {
+          DB::transaction(function () use (&$request, &$review) {
+            $review->content = $request->input('content');
+            $review->score = $request->input('score');
+            $review->save();
+          });
+        } catch (\Exception $e) {
+          return back()->withInput()->withErrors(['error' => 'レビューの更新に失敗しました。']);
+        }
 
         return redirect()->route('reviews.index', $review->restaurant_id)->with('message', 'レビューを更新しました。');
     }
