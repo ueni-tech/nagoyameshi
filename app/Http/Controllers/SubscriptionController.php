@@ -36,9 +36,15 @@ class SubscriptionController extends Controller
 
     function edit(Request $request)
     {
-        $intent = auth()->user()->createSetupIntent();
-        $user = $request->user();
-        $paymentMethod = $user->defaultPaymentMethod();
+        try {
+            $intent = auth()->user()->createSetupIntent();
+            $user = $request->user();
+            $paymentMethod = $user->defaultPaymentMethod();
+        } catch (Exception $exception) {
+            $error = $exception->getMessage();
+            return redirect()->back()->with('error', 'エラーが発生しました：' . $error);
+        }
+
         return view('subscriptions.edit', compact('intent', 'user', 'paymentMethod'));
     }
 
